@@ -1,0 +1,11 @@
+<% if (items.length) { %>
+<ul>
+  <% } %> <% items.forEach((item) => { %>
+  <li id="<%= item.id %>">
+    <%= item.body %>
+    <span class="link" id="reply">Ответить</span>
+    <%- include('./comments.ejs', {items: item.children}) -%>
+  </li>
+  <% }) %> <% if (items.length) { %>
+</ul>
+<% } %>

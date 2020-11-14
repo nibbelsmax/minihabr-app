@@ -1,0 +1,8 @@
+{
+  "plugins": ["prettier", "node"],
+  "extends": ["prettier"],
+  "rules": {
+    "node/exports-style": ["module.exports"],
+    "no-console": 0
+  }  
+}
