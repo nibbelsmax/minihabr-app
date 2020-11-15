@@ -5,8 +5,6 @@ module.exports = {
     const userId = req.session.userId;
     const userLogin = req.session.userLogin;
 
-    console.log(req.body);
-
     if (!userId || !userLogin) {
       res.json({
         ok: false,
@@ -39,7 +37,6 @@ module.exports = {
           });
 
           const children = parentComment.children;
-          console.log(children.id);
           children.push(comment.id);
           parentComment.children = children;
           await parentComment.save();

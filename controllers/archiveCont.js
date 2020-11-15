@@ -1,5 +1,7 @@
 const config = require('../config');
 const models = require('../models');
+const moment = require('moment');
+moment.locale('ru');
 
 module.exports = {
   posts: async function (req, res) {
@@ -52,12 +54,13 @@ module.exports = {
         } else {
           const comments = await models.Comment.find({
             post: post.id,
-          }).populate('children');
+            parent: [],
+          });
 
-          console.log(comments);
           res.render('post/post', {
             post,
             comments,
+            moment,
             user: {
               id: id,
               login: login,

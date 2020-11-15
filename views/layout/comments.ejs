@@ -1,10 +1,14 @@
 <% if (items.length) { %>
 <ul>
-  <% } %> <% items.forEach((item) => { %>
+  <% } %> <% items.forEach(function(item){ %>
   <li id="<%= item.id %>">
+    <div class="head">
+      <a href="/users/<%= item.owner.login %>"> <%= item.owner.login %> </a>
+      <spam class="date"> <%= moment(item.createdAt).fromNow(); %> </spam>
+    </div>
     <%= item.body %>
-    <span class="link" id="reply">Ответить</span>
-    <%- include('./comments.ejs', {items: item.children}) -%>
+    <span class="link" id="reply">ответить</span>
+    <%- include('./comments.ejs', {items: item.children}) %>
   </li>
   <% }) %> <% if (items.length) { %>
 </ul>

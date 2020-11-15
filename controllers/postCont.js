@@ -5,7 +5,6 @@ module.exports = {
   addPostPage: function (req, res) {
     const id = req.session.id;
     const login = req.session.userLogin;
-    console.log(id, login);
 
     if (!id || !login) {
       res.redirect('/');
@@ -22,8 +21,6 @@ module.exports = {
   addPost: function (req, res) {
     const id = req.session.userId;
     const login = req.session.userLogin;
-
-    console.log(id, login);
 
     if (!id || !login) {
       res.redirect('/');
@@ -61,13 +58,11 @@ module.exports = {
           owner: id,
         })
           .then((post) => {
-            console.log(post);
             res.json({
               ok: true,
             });
           })
           .catch((err) => {
-            console.log(err);
             res.json({
               ok: false,
               error: 'Выстрел в ногу. База данных упала, фиксим проблему...',

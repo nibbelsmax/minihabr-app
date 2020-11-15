@@ -1,5 +1,6 @@
-const moongoose = require("mongoose");
+const moongoose = require('mongoose');
 const Schema = moongoose.Schema;
+const autopopulate = require('mongoose-autopopulate');
 
 const schema = new Schema(
   {
@@ -9,22 +10,24 @@ const schema = new Schema(
     },
     post: {
       type: Schema.Types.ObjectId,
-      ref: "Post",
+      ref: 'Post',
     },
     parent: [
       {
         type: Schema.Types.ObjectId,
-        ref: "Comment",
+        ref: 'Comment',
       },
     ],
     owner: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
+      autopopulate: true,
     },
     children: [
       {
         type: Schema.Types.ObjectId,
-        ref: "Comment",
+        ref: 'Comment',
+        autopopulate: true,
       },
     ],
     createdAt: {
@@ -36,9 +39,10 @@ const schema = new Schema(
     timestamps: false,
   }
 );
+schema.plugin(autopopulate);
 
-schema.set("toJSON", {
+schema.set('toJSON', {
   virtuals: true,
 });
 
-module.exports = moongoose.model("Comment", schema);
+module.exports = moongoose.model('Comment', schema);

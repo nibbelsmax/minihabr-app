@@ -128,9 +128,13 @@ module.exports = {
     }
   },
   logout: function (req, res) {
-    console.log('logout');
-    req.session
-      ? req.session.destroy(() => res.redirect('/'))
-      : res.redirect('/');
+    if (req.session) {
+      // delete session object
+      req.session.destroy(() => {
+        res.redirect('/');
+      });
+    } else {
+      res.redirect('/');
+    }
   },
 };
