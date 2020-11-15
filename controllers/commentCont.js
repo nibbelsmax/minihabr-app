@@ -14,12 +14,24 @@ module.exports = {
       const body = req.body.body;
       const parent = req.body.parent;
 
+      /*if (!body) {
+        res.json({
+          ok: false,
+          error: 'Пустой комментариий',
+        });
+      }*/
+
       try {
         if (!parent) {
           await models.Comment.create({
             post,
             body,
             owner: userId,
+          });
+          res.json({
+            ok: true,
+            body,
+            login: userLogin,
           });
         } else {
           const parentComment = await models.Comment.findById(parent);
@@ -40,6 +52,12 @@ module.exports = {
           children.push(comment.id);
           parentComment.children = children;
           await parentComment.save();
+
+          res.json({
+            ok: true,
+            body,
+            login: userLogin,
+          });
         }
       } catch (error) {
         res.json({

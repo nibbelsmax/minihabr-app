@@ -1,28 +1,30 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const path = require("path");
-const mongoose = require("mongoose");
-const session = require("express-session");
-const MongoStore = require("connect-mongo")(session);
+const express = require('express');
+const bodyParser = require('body-parser');
+const path = require('path');
+const mongoose = require('mongoose');
+const session = require('express-session');
+const bytes = require('bytes');
+const MongoStore = require('connect-mongo')(session);
+const multer = require('multer');
 
-const config = require("./config");
-const routes = require("./routes");
+const config = require('./config');
+const routes = require('./routes');
 
 // eslint-disable-next-line node/no-unpublished-require
-const staticAsset = require("static-asset");
-const router = require("./routes/comment");
+const staticAsset = require('static-asset');
+const router = require('./routes/comment');
 
 //database
 mongoose.Promise = global.Promise;
-mongoose.set("debug", config.IS_PRODUCTION);
+mongoose.set('debug', config.IS_PRODUCTION);
 
 mongoose.connection
-  .on("error", (error) => console.log(error))
-  .on("close", () => console.log("Database connection close"))
-  .once("open", () => {
+  .on('error', (error) => console.log(error))
+  .on('close', () => console.log('Database connection close'))
+  .once('open', () => {
     const info = mongoose.connections[0];
     console.log(`Connected to ${info.host}: ${info.port}/${info.name}`);
-    //require("./mocks")();
+    //require('./mocks')();
   });
 
 mongoose.connect(config.MONGO_URL, {
@@ -46,26 +48,29 @@ app.use(
 );
 
 //sets and uses
-app.set("view engine", "ejs");
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-
-app.use(staticAsset(path.join(__dirname, "public")));
-app.use(express.static(path.join(__dirname, "public")));
+app.set('view engine', 'ejs');
 app.use(
-  "/javascripts",
-  express.static(path.join(__dirname, "node_modules/jquery/dist"))
+  bodyParser.urlencoded({ extended: true, limit: bytes(1024 * 1024 * 5) })
+);
+app.use(bodyParser.json({ limits: bytes(1024 * 1024 * 5) }));
+
+app.use(staticAsset(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(
+  '/javascripts',
+  express.static(path.join(__dirname, 'node_modules/jquery/dist'))
 );
 
 //routes
-app.use("/", routes.archive);
-app.use("/api/auth", routes.auth);
-app.use("/post", routes.post);
-app.use("/comment", routes.comment);
+app.use('/', routes.archive);
+app.use('/api/auth', routes.auth);
+app.use('/post', routes.post);
+app.use('/comment', routes.comment);
+app.use('/upload', routes.upload);
 
 //catch 404 error
 app.use((req, res, next) => {
-  const err = new Error("Not Found 404");
+  const err = new Error('Not Found 404');
   err.status = 404;
   next(err);
 });
@@ -73,10 +78,10 @@ app.use((req, res, next) => {
 //error handler
 app.use((error, req, res) => {
   res.status(error.status || 500);
-  res.render("error", {
+  res.render('error', {
     message: error.message,
     error: !config.IS_PRODUCTION ? error : {},
-    title: "Ooops....",
+    title: 'Ooops....',
   });
 });
 

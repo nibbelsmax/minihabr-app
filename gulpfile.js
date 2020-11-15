@@ -26,10 +26,7 @@ gulp.task('scss', () => {
 gulp.task('scripts', () => {
   return (
     gulp
-      .src([
-        'dev/js/**/*.js',
-        'node_modules/medium-editor/dist/js/medium-editor.min.js',
-      ])
+      .src(['dev/js/**/*.js'])
       .pipe(concat('scripts.js'))
       //.pipe(uglify())
       .pipe(gulp.dest('public/javascripts'))

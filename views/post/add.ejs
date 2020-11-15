@@ -3,6 +3,7 @@
 <div class="main">
   <div class="container">
     <div class="content add-post">
+      
       <form method="post" class="post-form">
         <h1>Добавление поста</h1>
         <div class="form-group">
@@ -12,7 +13,7 @@
 
         <div class="form-group">
           <label for="post-body">Текст поста</label>
-          <div id="post-body"></div>
+          <textarea id="post-body"></textarea>
         </div>
 
         <div class="buttons">
@@ -20,8 +21,14 @@
           <button class="post-button">Запостить</button>
         </div>
       </form>
-    </div>
 
+      <form method="post" enctype="multipart/form-data" id="fileinfo">
+        <input type="file" name="images" required>
+        <button class="upload-button">Загрузить</button>
+      </form>
+
+
+    </div>
     <%- include('../layout/sidebar') -%>
   </div>
 </div>

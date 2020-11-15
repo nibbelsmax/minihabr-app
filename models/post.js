@@ -1,7 +1,7 @@
-const moongoose = require("mongoose");
+const moongoose = require('mongoose');
 const Schema = moongoose.Schema;
-const urlSlugs = require("mongoose-url-slugs");
-const transliter = require("transliter");
+const urlSlugs = require('mongoose-url-slugs');
+const transliter = require('transliter');
 
 const schema = new Schema(
   {
@@ -15,7 +15,11 @@ const schema = new Schema(
     },
     owner: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
+    },
+    commentCount: {
+      type: Number,
+      default: 0,
     },
   },
   {
@@ -23,15 +27,25 @@ const schema = new Schema(
   }
 );
 
+schema.statics = {
+  incCommentCount(postId) {
+    return this.findByIdAndUpdate(
+      postId,
+      { $inc: { commentCount: 1 } },
+      { new: true }
+    );
+  },
+};
+
 schema.plugin(
-  urlSlugs("title", {
-    field: "url",
+  urlSlugs('title', {
+    field: 'url',
     generator: (text) => transliter.slugify(text),
   })
 );
 
-schema.set("toJSON", {
+schema.set('toJSON', {
   virtuals: true,
 });
 
-module.exports = moongoose.model("Post", schema);
+module.exports = moongoose.model('Post', schema);

@@ -1,57 +1,71 @@
 $(function () {
   let commentForm;
   let parentId;
-  //add form
-  $("#new, #reply").on("click", function () {
+
+  function form(isNew, comment) {
+    $('.reply').show();
+
     if (commentForm) {
       commentForm.remove();
     }
-
     parentId = null;
-    commentForm = $("form.comment").clone(true, true);
 
-    if ($(this).attr("id") === "new") {
-      commentForm.appendTo(".comment-list");
+    commentForm = $('.comment').clone(true, true);
+
+    if (isNew) {
+      commentForm.find('.cancel').hide();
+      commentForm.appendTo('.comment-list');
     } else {
-      let parentComment = $(this).parent();
-      parentId = parentComment.attr("id");
-      $(this).after(commentForm);
+      var parentComment = $(comment).parent();
+      parentId = parentComment.attr('id');
+      $(comment).after(commentForm);
     }
 
-    commentForm.css({ display: "flex" });
+    commentForm.css({ display: 'flex' });
+  }
+
+  // load
+  form(true);
+
+  // add form
+  $('.reply').on('click', function () {
+    form(false, this);
+    $(this).hide();
   });
 
-  $("form.comment .cancel").on("click", function (e) {
+  $('form.comment .cancel').on('click', function (e) {
     e.preventDefault();
     commentForm.remove();
+    form(true);
   });
 
-  $("form.comment .send").on("click", (e) => {
+  $('form.comment .send').on('click', (e) => {
     e.preventDefault();
     //removeErrors();
 
     let data = {
-      post: $(".comments").attr("id"),
-      body: commentForm.find("textarea").val(),
+      post: $('.comments').attr('id'),
+      body: commentForm.find('textarea').val(),
       parent: parentId,
     };
     console.log(`data: ${data}`);
     $.ajax({
-      type: "POST",
+      type: 'POST',
       data: JSON.stringify(data),
-      contentType: "application/json",
-      url: "/comment/add",
+      contentType: 'application/json',
+      url: '/comment/add',
     }).done((data) => {
       console.log(data);
       if (!data.ok) {
-        $(".post-form h1").after('<p class="error">' + data.error + "</p>");
-        if (data.fields) {
-          data.fields.forEach((item) => {
-            $("#post-" + item).addClass("error");
-          });
+        if (data.error === undefined) {
+          data.error = 'Неизвестная ошибка';
         }
+        $(commentForm).prepend(`<p class = "error">${data.error}</p>`);
       } else {
-        $(location).attr("href", "/");
+        let newComment = `<ul><li style = "background-color:#ffffe0;"><div class="head"><a href="/users/${data.login}">${data.login}</a>
+            <spam class="date">только что</spam></div>${data.body}</li></ul>`;
+        $(commentForm).after(newComment);
+        form(true);
       }
     });
   });

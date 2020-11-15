@@ -10,13 +10,11 @@ $headerHeight: 49px;
 $footerHeight: 49px;
 $borderRadius: 2px;
 
-@import "reset";
-@import "grid";
-@import "typography";
-@import "forms";
-@import "link";
-@import "../../node_modules/medium-editor/dist/css/medium-editor";
-@import "../../node_modules/medium-editor/dist/css/themes/default";
+@import 'reset';
+@import 'grid';
+@import 'typography';
+@import 'forms';
+@import 'link';
 
 html {
   display: flex;
@@ -33,9 +31,9 @@ body {
   padding-top: $headerHeight + $freeSpace;
 }
 
-@import "header";
-@import "main";
-@import "footer";
-@import "components/post";
-@import "components/auth";
-@import "components/comments";
+@import 'header';
+@import 'main';
+@import 'footer';
+@import 'components/post';
+@import 'components/auth';
+@import 'components/comments';
